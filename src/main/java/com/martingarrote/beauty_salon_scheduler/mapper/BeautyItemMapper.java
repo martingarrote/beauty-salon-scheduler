@@ -10,4 +10,5 @@ public interface BeautyItemMapper {
     BeautyItemMapper INSTANCE = Mappers.getMapper(BeautyItemMapper.class);
 
     BeautyItemDTO toDTO(BeautyItem beautyItem);
+    BeautyItem toEntity(BeautyItemDTO beautyItemDTO);
 }
