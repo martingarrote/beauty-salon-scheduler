@@ -6,6 +6,8 @@ import com.martingarrote.beauty_salon_scheduler.mapper.BeautyItemMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class BeautyItemService {
@@ -19,5 +21,11 @@ public class BeautyItemService {
         BeautyItem savedEntity = repository.save(entity);
 
         return mapper.toDTO(savedEntity);
+    }
+
+    public List<BeautyItemDTO> findAll() {
+        List<BeautyItem> dtoList = repository.findAll();
+
+        return dtoList.stream().map(mapper::toDTO).toList();
     }
 }
