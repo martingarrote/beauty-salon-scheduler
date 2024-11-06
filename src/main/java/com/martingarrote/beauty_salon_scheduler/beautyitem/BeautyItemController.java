@@ -24,4 +24,9 @@ public class BeautyItemController {
     public ResponseEntity<List<BeautyItemDTO>> findAll() {
         return ResponseEntity.status(HttpStatus.OK).body(service.findAll());
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<BeautyItemDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.findById(id));
+    }
 }
