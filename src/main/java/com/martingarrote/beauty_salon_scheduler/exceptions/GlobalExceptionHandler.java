@@ -11,4 +11,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice(annotations = RestController.class)
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+    @ExceptionHandler(RuntimeException.class)
+    private ResponseEntity<ExceptionResponse> runtimeExceptionHandler(RuntimeException exception) {
+        ExceptionResponse response = new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR, exception.getLocalizedMessage());
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
 }
