@@ -2,6 +2,7 @@ package com.martingarrote.beauty_salon_scheduler.beautyitem;
 
 
 import com.martingarrote.beauty_salon_scheduler.beautyitem.dto.BeautyItemDTO;
+import com.martingarrote.beauty_salon_scheduler.beautyitem.dto.BeautyItemPatchDTO;
 import com.martingarrote.beauty_salon_scheduler.mapper.BeautyItemMapper;
 import com.martingarrote.beauty_salon_scheduler.mapper.common.PageDTO;
 import lombok.AllArgsConstructor;
@@ -51,4 +52,25 @@ public class BeautyItemService {
                 result.getTotalPages()
         );
     }
+
+    public BeautyItemDTO patchUpdate(Long id, BeautyItemPatchDTO patchDTO) {
+        BeautyItem beautyItem = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Not found")); // change to custom exception
+
+        if (patchDTO.name() != null) {
+            beautyItem.setName(patchDTO.name());
+        }
+        if (patchDTO.description() != null) {
+            beautyItem.setDescription(patchDTO.description());
+        }
+        if (patchDTO.duration() != null) {
+            beautyItem.setDuration(patchDTO.duration());
+        }
+        if (patchDTO.price() != null) {
+            beautyItem.setPrice(patchDTO.price());
+        }
+
+        return mapper.toDTO(repository.save(beautyItem));
+    }
+
 }
