@@ -17,7 +17,7 @@ import java.util.List;
 public class BeautyItemService {
 
     private final BeautyItemRepository repository;
-    private final BeautyItemMapper mapper;
+    private final BeautyItemMapper mapper = BeautyItemMapper.INSTANCE;
 
     public BeautyItemDTO create(BeautyItemDTO dto) {
         BeautyItem entity = mapper.toEntity(dto);
