@@ -73,4 +73,12 @@ public class BeautyItemService {
         return mapper.toDTO(repository.save(beautyItem));
     }
 
+    public void delete(Long id) {
+        if (!repository.existsById(id)) {
+            throw new RuntimeException("Beauty item not found with id " + id); // change to custom exception
+        }
+
+        repository.deleteById(id);
+    }
+
 }
