@@ -47,4 +47,11 @@ public class BeautyItemController {
     public ResponseEntity<BeautyItemDTO> patchUpdate(@PathVariable Long id, @RequestBody BeautyItemPatchDTO dto) {
         return ResponseEntity.status(HttpStatus.OK).body(service.patchUpdate(id, dto));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }
