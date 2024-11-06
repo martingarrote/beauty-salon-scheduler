@@ -33,6 +33,12 @@ public class BeautyItemService {
         return dtoList.stream().map(mapper::toDTO).toList();
     }
 
+    public BeautyItemDTO findById(Long id) {
+        return repository.findById(id)
+                .map(mapper::toDTO)
+                .orElseThrow(RuntimeException::new); // change to custom exception
+    }
+
     public PageDTO<BeautyItemDTO> search(String name, int duration, double price, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<BeautyItem> result = repository.search(name, duration, price, pageable);
