@@ -1,6 +1,7 @@
 package com.martingarrote.beauty_salon_scheduler.beautyitem;
 
 import com.martingarrote.beauty_salon_scheduler.beautyitem.dto.BeautyItemDTO;
+import com.martingarrote.beauty_salon_scheduler.beautyitem.dto.BeautyItemPatchDTO;
 import com.martingarrote.beauty_salon_scheduler.mapper.common.PageDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -40,5 +41,10 @@ public class BeautyItemController {
             @RequestParam(defaultValue = "10") int size) {
 
         return ResponseEntity.status(HttpStatus.OK).body(service.search(name, duration, price, page, size));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<BeautyItemDTO> patchUpdate(@PathVariable Long id, @RequestBody BeautyItemPatchDTO dto) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.patchUpdate(id, dto));
     }
 }
