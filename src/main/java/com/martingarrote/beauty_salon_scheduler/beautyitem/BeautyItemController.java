@@ -1,6 +1,7 @@
 package com.martingarrote.beauty_salon_scheduler.beautyitem;
 
 import com.martingarrote.beauty_salon_scheduler.beautyitem.dto.BeautyItemDTO;
+import com.martingarrote.beauty_salon_scheduler.mapper.common.PageDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,5 +29,16 @@ public class BeautyItemController {
     @GetMapping("/{id}")
     public ResponseEntity<BeautyItemDTO> findById(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(service.findById(id));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<PageDTO<BeautyItemDTO>> search(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Integer duration,
+            @RequestParam(required = false) Double price,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(service.search(name, duration, price, page, size));
     }
 }
