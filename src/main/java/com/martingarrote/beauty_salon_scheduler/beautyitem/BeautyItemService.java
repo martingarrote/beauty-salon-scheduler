@@ -3,8 +3,10 @@ package com.martingarrote.beauty_salon_scheduler.beautyitem;
 
 import com.martingarrote.beauty_salon_scheduler.beautyitem.dto.BeautyItemDTO;
 import com.martingarrote.beauty_salon_scheduler.beautyitem.dto.BeautyItemPatchDTO;
+import com.martingarrote.beauty_salon_scheduler.exceptions.beautyitem.BeautyItemNotFoundException;
 import com.martingarrote.beauty_salon_scheduler.mapper.BeautyItemMapper;
 import com.martingarrote.beauty_salon_scheduler.mapper.common.PageDTO;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,7 +39,7 @@ public class BeautyItemService {
     public BeautyItemDTO findById(Long id) {
         return repository.findById(id)
                 .map(mapper::toDTO)
-                .orElseThrow(RuntimeException::new); // change to custom exception
+                .orElseThrow(() -> new BeautyItemNotFoundException("Not found Beauty Item entity with id " + id));
     }
 
     public PageDTO<BeautyItemDTO> search(String name, Integer duration, Double price, int page, int size) {
@@ -55,7 +57,7 @@ public class BeautyItemService {
 
     public BeautyItemDTO patchUpdate(Long id, BeautyItemPatchDTO patchDTO) {
         BeautyItem beautyItem = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Not found")); // change to custom exception
+                .orElseThrow(() -> new BeautyItemNotFoundException("Not found Beauty Item entity with id " + id));
 
         if (patchDTO.name() != null) {
             beautyItem.setName(patchDTO.name());
@@ -75,7 +77,7 @@ public class BeautyItemService {
 
     public void delete(Long id) {
         if (!repository.existsById(id)) {
-            throw new RuntimeException("Beauty item not found with id " + id); // change to custom exception
+            throw new BeautyItemNotFoundException("Beauty item not found with id " + id);
         }
 
         repository.deleteById(id);
