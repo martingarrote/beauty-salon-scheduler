@@ -16,4 +16,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ExceptionResponse response = new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR, exception.getLocalizedMessage());
         return ResponseEntity.status(response.getStatus()).body(response);
     }
+
+    @ExceptionHandler(BeautyItemNotFoundException.class)
+    private ResponseEntity<ExceptionResponse> beautyItemNotFoundExceptionHandler(BeautyItemNotFoundException exception) {
+        ExceptionResponse response = new ExceptionResponse(HttpStatus.NOT_FOUND, exception.getLocalizedMessage());
+
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
 }
