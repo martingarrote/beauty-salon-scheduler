@@ -1,6 +1,9 @@
 package com.martingarrote.beauty_salon_scheduler.exceptions;
 
 import com.martingarrote.beauty_salon_scheduler.exceptions.beautyitem.BeautyItemNotFoundException;
+import com.martingarrote.beauty_salon_scheduler.exceptions.user.EmailAlreadyInUseException;
+import com.martingarrote.beauty_salon_scheduler.exceptions.user.EmailNotFoundException;
+import com.martingarrote.beauty_salon_scheduler.exceptions.user.WrongPasswordException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,27 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(BeautyItemNotFoundException.class)
     private ResponseEntity<ExceptionResponse> beautyItemNotFoundExceptionHandler(BeautyItemNotFoundException exception) {
         ExceptionResponse response = new ExceptionResponse(HttpStatus.NOT_FOUND, exception.getLocalizedMessage());
+
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @ExceptionHandler(EmailAlreadyInUseException.class)
+    private ResponseEntity<ExceptionResponse> emailAlreadyInUseExceptionHandler(EmailAlreadyInUseException exception) {
+        ExceptionResponse response = new ExceptionResponse(HttpStatus.CONFLICT, exception.getLocalizedMessage());
+
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @ExceptionHandler(EmailNotFoundException.class)
+    private ResponseEntity<ExceptionResponse> emailNotFoundExceptionHandler(EmailNotFoundException exception) {
+        ExceptionResponse response = new ExceptionResponse(HttpStatus.NOT_FOUND, exception.getLocalizedMessage());
+
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @ExceptionHandler(WrongPasswordException.class)
+    private ResponseEntity<ExceptionResponse> wrongPasswordExceptionHandler(WrongPasswordException exception) {
+        ExceptionResponse response = new ExceptionResponse(HttpStatus.UNAUTHORIZED, exception.getLocalizedMessage());
 
         return ResponseEntity.status(response.getStatus()).body(response);
     }
