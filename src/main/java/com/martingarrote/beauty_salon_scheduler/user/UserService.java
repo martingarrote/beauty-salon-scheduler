@@ -38,6 +38,7 @@ public class UserService {
         Set<Authority> userAuthorities = Set.of(getAuthority(AUTHORITY_USER));
 
         User user = User.builder()
+                .name(dto.name())
                 .email(dto.email())
                 .password(passwordEncoder.encode(dto.password()))
                 .authorities(userAuthorities)
