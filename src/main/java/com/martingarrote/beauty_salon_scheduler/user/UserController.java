@@ -1,5 +1,6 @@
 package com.martingarrote.beauty_salon_scheduler.user;
 
+import com.martingarrote.beauty_salon_scheduler.mapper.common.PageDTO;
 import com.martingarrote.beauty_salon_scheduler.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -46,6 +47,21 @@ public class UserController {
     @GetMapping("/all")
     public ResponseEntity<List<FullUserDTO>> findAll() {
         return ResponseEntity.status(HttpStatus.OK).body(service.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<FullUserDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.findById(id));
+    }
+
+    @GetMapping("search")
+    public PageDTO<FullUserDTO> search(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String authority,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return service.search(name, email, authority, page, size);
     }
 
     private Long getUserId(Authentication authentication) {
