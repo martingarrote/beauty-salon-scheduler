@@ -7,12 +7,16 @@ import com.martingarrote.beauty_salon_scheduler.exceptions.user.EmailNotFoundExc
 import com.martingarrote.beauty_salon_scheduler.exceptions.user.UserNotFoundException;
 import com.martingarrote.beauty_salon_scheduler.exceptions.user.WrongPasswordException;
 import com.martingarrote.beauty_salon_scheduler.mapper.UserMapper;
+import com.martingarrote.beauty_salon_scheduler.mapper.common.PageDTO;
 import com.martingarrote.beauty_salon_scheduler.security.TokenService;
 import com.martingarrote.beauty_salon_scheduler.user.dto.*;
 import com.martingarrote.beauty_salon_scheduler.user.enums.FaceShape;
 import com.martingarrote.beauty_salon_scheduler.user.enums.HairCurl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -66,6 +70,27 @@ public class UserService {
         User user = repository.findByEmail(email).orElseThrow(EmailNotFoundException::new);
 
         return mapper.toProfileDTO(user);
+    }
+
+    public PageDTO<FullUserDTO> search(
+            String name,
+            String email,
+            String authority,
+            int page,
+            int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<User> result = repository.search(name, email, authority, pageable);
+
+        return new PageDTO<>(
+                result.getContent().stream()
+                        .map(mapper::toFullUserDTO)
+                        .toList(),
+                result.getNumber(),
+                result.getSize(),
+                result.getTotalElements(),
+                result.getTotalPages()
+        );
     }
 
     public List<UserDTO> findAll() {
