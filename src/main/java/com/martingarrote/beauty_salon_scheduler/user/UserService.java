@@ -7,10 +7,9 @@ import com.martingarrote.beauty_salon_scheduler.exceptions.user.EmailNotFoundExc
 import com.martingarrote.beauty_salon_scheduler.exceptions.user.WrongPasswordException;
 import com.martingarrote.beauty_salon_scheduler.mapper.UserMapper;
 import com.martingarrote.beauty_salon_scheduler.security.TokenService;
-import com.martingarrote.beauty_salon_scheduler.user.dto.EmployeeDTO;
-import com.martingarrote.beauty_salon_scheduler.user.dto.LoginDTO;
-import com.martingarrote.beauty_salon_scheduler.user.dto.SignupDTO;
-import com.martingarrote.beauty_salon_scheduler.user.dto.TokenDTO;
+import com.martingarrote.beauty_salon_scheduler.user.dto.*;
+import com.martingarrote.beauty_salon_scheduler.user.enums.FaceShape;
+import com.martingarrote.beauty_salon_scheduler.user.enums.HairCurl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -60,6 +59,39 @@ public class UserService {
         }
         
         return new TokenDTO(tokenService.generateToken(user));
+    }
+
+    public UserDTO patchUpdate(Long id, UserPatchDTO dto) {
+        User user = repository.findById(id).orElseThrow(() -> new RuntimeException("user not found"));
+
+        if (dto.name() != null) {
+            user.setName(dto.name());
+        }
+        if (dto.email() != null) {
+            user.setEmail(dto.email());
+        }
+        if (dto.faceShape() != null) {
+            FaceShape value = FaceShape.valueOf(dto.faceShape().toUpperCase());
+
+            user.setFaceShape(value);
+        }
+        if (dto.hairCurl() != null) {
+            HairCurl value = HairCurl.valueOf(dto.hairCurl().toUpperCase());
+
+            user.setHairCurl(value);
+        }
+        if (dto.about() != null) {
+            user.setAbout(dto.about());
+        }
+        if (dto.instagram() != null) {
+            user.setInstagram(dto.instagram());
+        }
+
+        return mapper.toDTO(repository.save(user));
+    }
+
+    public List<UserDTO> findAll() {
+        return repository.findAll().stream().map(mapper::toDTO).toList();
     }
 
     public List<EmployeeDTO> findEmployees() {
