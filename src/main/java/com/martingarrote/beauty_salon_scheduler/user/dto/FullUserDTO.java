@@ -1,7 +1,10 @@
 package com.martingarrote.beauty_salon_scheduler.user.dto;
 
+import lombok.Builder;
+
 import java.util.Set;
 
+@Builder
 public record FullUserDTO(
         String name,
 
