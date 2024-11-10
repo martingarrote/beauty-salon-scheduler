@@ -4,6 +4,7 @@ import com.martingarrote.beauty_salon_scheduler.authority.Authority;
 import com.martingarrote.beauty_salon_scheduler.authority.AuthorityRepository;
 import com.martingarrote.beauty_salon_scheduler.exceptions.user.EmailAlreadyInUseException;
 import com.martingarrote.beauty_salon_scheduler.exceptions.user.EmailNotFoundException;
+import com.martingarrote.beauty_salon_scheduler.exceptions.user.UserNotFoundException;
 import com.martingarrote.beauty_salon_scheduler.exceptions.user.WrongPasswordException;
 import com.martingarrote.beauty_salon_scheduler.mapper.UserMapper;
 import com.martingarrote.beauty_salon_scheduler.security.TokenService;
@@ -61,8 +62,14 @@ public class UserService {
         return new TokenDTO(tokenService.generateToken(user));
     }
 
+    public ProfileDTO profile(String email) {
+        User user = repository.findByEmail(email).orElseThrow(EmailNotFoundException::new);
+
+        return mapper.toProfileDTO(user);
+    }
+
     public UserDTO patchUpdate(Long id, UserPatchDTO dto) {
-        User user = repository.findById(id).orElseThrow(() -> new RuntimeException("user not found"));
+        User user = repository.findById(id).orElseThrow(UserNotFoundException::new);
 
         if (dto.name() != null) {
             user.setName(dto.name());
