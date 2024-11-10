@@ -3,6 +3,7 @@ package com.martingarrote.beauty_salon_scheduler.exceptions;
 import com.martingarrote.beauty_salon_scheduler.exceptions.beautyitem.BeautyItemNotFoundException;
 import com.martingarrote.beauty_salon_scheduler.exceptions.user.EmailAlreadyInUseException;
 import com.martingarrote.beauty_salon_scheduler.exceptions.user.EmailNotFoundException;
+import com.martingarrote.beauty_salon_scheduler.exceptions.user.UserNotFoundException;
 import com.martingarrote.beauty_salon_scheduler.exceptions.user.WrongPasswordException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -44,6 +45,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(WrongPasswordException.class)
     private ResponseEntity<ExceptionResponse> wrongPasswordExceptionHandler(WrongPasswordException exception) {
         ExceptionResponse response = new ExceptionResponse(HttpStatus.UNAUTHORIZED, exception.getLocalizedMessage());
+
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    private ResponseEntity<ExceptionResponse> userNotFoundExceptionHandler(UserNotFoundException exception) {
+        ExceptionResponse response = new ExceptionResponse(HttpStatus.NOT_FOUND, exception.getLocalizedMessage());
 
         return ResponseEntity.status(response.getStatus()).body(response);
     }
