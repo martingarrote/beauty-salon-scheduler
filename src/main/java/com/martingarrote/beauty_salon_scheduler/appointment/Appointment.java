@@ -51,4 +51,6 @@ public class Appointment {
 
     private String observations;
 
+    private Double totalPrice;
+
 }
