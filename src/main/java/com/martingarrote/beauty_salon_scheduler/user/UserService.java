@@ -84,6 +84,14 @@ public class UserService {
         return users.stream().map(mapper::toEmployeeDTO).toList();
     }
 
+    public ProfileDTO updateProfile(Long id, UserPatchDTO dto) {
+        patchUpdate(id, dto);
+
+        User user = repository.findById(id).orElseThrow(UserNotFoundException::new);
+
+        return mapper.toProfileDTO(user);
+    }
+
     public UserDTO patchUpdate(Long id, UserPatchDTO dto) {
         User user = repository.findById(id).orElseThrow(UserNotFoundException::new);
 
