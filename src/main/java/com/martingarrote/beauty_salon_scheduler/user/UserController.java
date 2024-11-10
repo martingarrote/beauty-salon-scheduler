@@ -69,6 +69,13 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(service.patchUpdate(id, dto));
     }
 
+    @PatchMapping("/profile")
+    public ResponseEntity<ProfileDTO> updateProfile(Authentication authentication, @RequestBody UserPatchDTO dto) {
+        ProfileDTO updatedUser = service.updateProfile(getUserId(authentication), dto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
+    }
+
     private Long getUserId(Authentication authentication) {
         if (authentication.getPrincipal() instanceof User user) {
             return user.getId();
