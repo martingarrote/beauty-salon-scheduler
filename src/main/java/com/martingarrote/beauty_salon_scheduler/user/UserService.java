@@ -5,7 +5,9 @@ import com.martingarrote.beauty_salon_scheduler.authority.AuthorityRepository;
 import com.martingarrote.beauty_salon_scheduler.exceptions.user.EmailAlreadyInUseException;
 import com.martingarrote.beauty_salon_scheduler.exceptions.user.EmailNotFoundException;
 import com.martingarrote.beauty_salon_scheduler.exceptions.user.WrongPasswordException;
+import com.martingarrote.beauty_salon_scheduler.mapper.UserMapper;
 import com.martingarrote.beauty_salon_scheduler.security.TokenService;
+import com.martingarrote.beauty_salon_scheduler.user.dto.EmployeeDTO;
 import com.martingarrote.beauty_salon_scheduler.user.dto.LoginDTO;
 import com.martingarrote.beauty_salon_scheduler.user.dto.SignupDTO;
 import com.martingarrote.beauty_salon_scheduler.user.dto.TokenDTO;
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -21,6 +24,7 @@ import java.util.Set;
 public class UserService {
 
     private final UserRepository repository;
+    private final UserMapper mapper = UserMapper.INSTANCE;
     private final AuthorityRepository authorityRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
@@ -56,6 +60,12 @@ public class UserService {
         }
         
         return new TokenDTO(tokenService.generateToken(user));
+    }
+
+    public List<EmployeeDTO> findEmployees() {
+        var users = repository.findByAuthorities_Authority(AUTHORITY_EMPLOYEE);
+
+        return users.stream().map(mapper::toEmployeeDTO).toList();
     }
 
     private Authority getAuthority(String authority) {
