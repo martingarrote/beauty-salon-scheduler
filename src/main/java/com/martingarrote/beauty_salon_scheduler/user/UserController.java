@@ -2,6 +2,7 @@ package com.martingarrote.beauty_salon_scheduler.user;
 
 import com.martingarrote.beauty_salon_scheduler.mapper.common.PageDTO;
 import com.martingarrote.beauty_salon_scheduler.user.dto.*;
+import com.martingarrote.beauty_salon_scheduler.utils.AuthenticationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.martingarrote.beauty_salon_scheduler.utils.AuthenticationUtils.getUserEmail;
+import static com.martingarrote.beauty_salon_scheduler.utils.AuthenticationUtils.getUserId;
 
 @RestController
 @RequestMapping("/api/users")
@@ -32,11 +36,7 @@ public class UserController {
     public ResponseEntity<ProfileDTO> profile(Authentication authentication) {
         var email = getUserEmail(authentication);
 
-        if (email == null) {
-            throw new RuntimeException("Error to identify user");
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).body(service.profile(getUserEmail(authentication)));
+        return ResponseEntity.status(HttpStatus.OK).body(service.profile(email));
     }
 
     @GetMapping("/employees")
@@ -74,20 +74,6 @@ public class UserController {
         ProfileDTO updatedUser = service.updateProfile(getUserId(authentication), dto);
 
         return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
-    }
-
-    private Long getUserId(Authentication authentication) {
-        if (authentication.getPrincipal() instanceof User user) {
-            return user.getId();
-        }
-        return null;
-    }
-
-    private String getUserEmail(Authentication authentication) {
-        if (authentication.getPrincipal() instanceof User user) {
-            return user.getEmail();
-        }
-        return null;
     }
 
 }
