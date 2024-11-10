@@ -49,7 +49,7 @@ public class User {
     private String instagram;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "user_authority_mapping",
+    @JoinTable(name = "user_authority_junction",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "authority"))
     private Set<Authority> authorities;
