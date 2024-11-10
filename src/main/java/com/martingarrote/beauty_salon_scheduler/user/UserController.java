@@ -64,6 +64,11 @@ public class UserController {
         return service.search(name, email, authority, page, size);
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<FullUserDTO> patchUpdate(@PathVariable Long id, @RequestBody UserPatchDTO dto) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.patchUpdate(id, dto));
+    }
+
     private Long getUserId(Authentication authentication) {
         if (authentication.getPrincipal() instanceof User user) {
             return user.getId();
