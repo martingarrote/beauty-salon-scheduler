@@ -1,14 +1,13 @@
 package com.martingarrote.beauty_salon_scheduler.user;
 
-import com.martingarrote.beauty_salon_scheduler.user.dto.LoginDTO;
-import com.martingarrote.beauty_salon_scheduler.user.dto.ProfileDTO;
-import com.martingarrote.beauty_salon_scheduler.user.dto.SignupDTO;
-import com.martingarrote.beauty_salon_scheduler.user.dto.TokenDTO;
+import com.martingarrote.beauty_salon_scheduler.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -37,6 +36,16 @@ public class UserController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(service.profile(getUserEmail(authentication)));
+    }
+
+    @GetMapping("/employees")
+    public ResponseEntity<List<EmployeeDTO>> findEmployees() {
+        return ResponseEntity.status(HttpStatus.OK).body(service.findEmployees());
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<FullUserDTO>> findAll() {
+        return ResponseEntity.status(HttpStatus.OK).body(service.findAll());
     }
 
     private Long getUserId(Authentication authentication) {
