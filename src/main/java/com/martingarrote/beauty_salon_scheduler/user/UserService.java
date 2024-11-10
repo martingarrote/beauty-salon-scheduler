@@ -93,14 +93,14 @@ public class UserService {
         );
     }
 
-    public List<UserDTO> findAll() {
-        return repository.findAll().stream().map(mapper::toDTO).toList();
+    public List<FullUserDTO> findAll() {
+        return repository.findAll().stream().map(mapper::toFullUserDTO).toList();
     }
 
-    public UserDTO findById(Long id) {
+    public FullUserDTO findById(Long id) {
         User user = repository.findById(id).orElseThrow(UserNotFoundException::new);
 
-        return mapper.toDTO(user);
+        return mapper.toFullUserDTO(user);
     }
 
     public List<EmployeeDTO> findEmployees() {
@@ -117,7 +117,7 @@ public class UserService {
         return mapper.toProfileDTO(user);
     }
 
-    public UserDTO patchUpdate(Long id, UserPatchDTO dto) {
+    public FullUserDTO patchUpdate(Long id, UserPatchDTO dto) {
         User user = repository.findById(id).orElseThrow(UserNotFoundException::new);
 
         if (dto.name() != null) {
@@ -143,7 +143,7 @@ public class UserService {
             user.setInstagram(dto.instagram());
         }
 
-        return mapper.toDTO(repository.save(user));
+        return mapper.toFullUserDTO(repository.save(user));
     }
 
     private Authority getAuthority(String authority) {
