@@ -49,4 +49,6 @@ public class Appointment {
     )
     private List<BeautyItem> beautyItems;
 
+    private String observations;
+
 }
