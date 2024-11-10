@@ -68,6 +68,22 @@ public class UserService {
         return mapper.toProfileDTO(user);
     }
 
+    public List<UserDTO> findAll() {
+        return repository.findAll().stream().map(mapper::toDTO).toList();
+    }
+
+    public UserDTO findById(Long id) {
+        User user = repository.findById(id).orElseThrow(UserNotFoundException::new);
+
+        return mapper.toDTO(user);
+    }
+
+    public List<EmployeeDTO> findEmployees() {
+        var users = repository.findByAuthorities_Authority(AUTHORITY_EMPLOYEE);
+
+        return users.stream().map(mapper::toEmployeeDTO).toList();
+    }
+
     public UserDTO patchUpdate(Long id, UserPatchDTO dto) {
         User user = repository.findById(id).orElseThrow(UserNotFoundException::new);
 
@@ -95,16 +111,6 @@ public class UserService {
         }
 
         return mapper.toDTO(repository.save(user));
-    }
-
-    public List<UserDTO> findAll() {
-        return repository.findAll().stream().map(mapper::toDTO).toList();
-    }
-
-    public List<EmployeeDTO> findEmployees() {
-        var users = repository.findByAuthorities_Authority(AUTHORITY_EMPLOYEE);
-
-        return users.stream().map(mapper::toEmployeeDTO).toList();
     }
 
     private Authority getAuthority(String authority) {
