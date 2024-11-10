@@ -44,6 +44,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     private HairCurl hairCurl;
 
+    private String about;
+
+    private String instagram;
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "user_authority_mapping",
             joinColumns = @JoinColumn(name = "user_id"),
