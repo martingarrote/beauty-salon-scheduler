@@ -8,6 +8,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record AppointmentDTO(
+
+        Long id,
+
         LocalDateTime startInterval,
 
         LocalDateTime endInterval,
