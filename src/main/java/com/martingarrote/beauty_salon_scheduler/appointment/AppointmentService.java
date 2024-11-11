@@ -4,7 +4,9 @@ import com.martingarrote.beauty_salon_scheduler.appointment.dto.AppointmentDTO;
 import com.martingarrote.beauty_salon_scheduler.appointment.dto.CreationAppointmentDTO;
 import com.martingarrote.beauty_salon_scheduler.beautyitem.BeautyItem;
 import com.martingarrote.beauty_salon_scheduler.beautyitem.BeautyItemRepository;
+import com.martingarrote.beauty_salon_scheduler.exceptions.appointment.AppointmentNotFoundException;
 import com.martingarrote.beauty_salon_scheduler.exceptions.appointment.AppointmentOverlapException;
+import com.martingarrote.beauty_salon_scheduler.exceptions.common.UnauthorizedAccessException;
 import com.martingarrote.beauty_salon_scheduler.exceptions.user.UserNotFoundException;
 import com.martingarrote.beauty_salon_scheduler.mapper.AppointmentMapper;
 import com.martingarrote.beauty_salon_scheduler.user.User;
@@ -71,5 +73,17 @@ public class AppointmentService {
     public List<AppointmentDTO> getNextAppointments(Long userId) {
         return repository.findByCustomerIdAndStartIntervalAfter(userId, LocalDateTime.now())
                 .stream().map(mapper::toDTO).toList();
+    }
+
+    public void cancelAppointment(Long appointmentId, Long userId) {
+        Appointment appointment = repository.findById(appointmentId).orElseThrow(AppointmentNotFoundException::new);
+
+        if (!appointment.getCustomer().getId().equals(userId) && !appointment.getEmployee().getId().equals(userId)) {
+            throw new UnauthorizedAccessException("You are not authorized to cancel this appointment");
+        }
+
+        appointment.setActive(false);
+
+        repository.save(appointment);
     }
 }

@@ -34,4 +34,10 @@ public class AppointmentController {
         return ResponseEntity.status(HttpStatus.OK).body(service.getNextAppointments(getUserId(auth)));
     }
 
+    @PatchMapping("/cancel/{appointmentId}")
+    public ResponseEntity<Void> cancelAppointment(@PathVariable Long appointmentId, Authentication auth) {
+        service.cancelAppointment(appointmentId, getUserId(auth));
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }
