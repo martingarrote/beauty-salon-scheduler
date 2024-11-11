@@ -5,10 +5,7 @@ import com.martingarrote.beauty_salon_scheduler.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,7 +25,9 @@ public class Appointment {
     @NotNull
     @Future
     @Column(nullable = false)
-    private LocalDateTime dateTime;
+    private LocalDateTime startInterval;
+
+    private LocalDateTime endInterval;
 
     @NotNull
     @ManyToOne
@@ -49,8 +48,10 @@ public class Appointment {
     )
     private List<BeautyItem> beautyItems;
 
-    private String observations;
+    private boolean active;
 
     private Double totalPrice;
+
+    private String observations;
 
 }
