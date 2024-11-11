@@ -63,4 +63,13 @@ public class AppointmentService {
         return mapper.toDTO(repository.save(appointment));
     }
 
+    public List<AppointmentDTO> getAppointmentHistory(Long userId) {
+        return repository.findByCustomerIdAndStartIntervalBefore(userId, LocalDateTime.now())
+                .stream().map(mapper::toDTO).toList();
+    }
+
+    public List<AppointmentDTO> getNextAppointments(Long userId) {
+        return repository.findByCustomerIdAndStartIntervalAfter(userId, LocalDateTime.now())
+                .stream().map(mapper::toDTO).toList();
+    }
 }
