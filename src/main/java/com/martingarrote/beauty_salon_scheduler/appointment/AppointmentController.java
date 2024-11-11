@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import static com.martingarrote.beauty_salon_scheduler.utils.AuthenticationUtils.getUserId;
 
@@ -37,6 +39,15 @@ public class AppointmentController {
     @PatchMapping("/cancel/{appointmentId}")
     public ResponseEntity<Void> cancelAppointment(@PathVariable Long appointmentId, Authentication auth) {
         service.cancelAppointment(appointmentId, getUserId(auth));
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PatchMapping("/reschedule/{appointmentId}")
+    public ResponseEntity<Void> rescheduleAppointment(@PathVariable Long appointmentId,
+                                                      @RequestBody Map<String, LocalDateTime> newDate,
+                                                      Authentication auth) {
+        service.rescheduleAppointment(appointmentId, newDate.get("newDate"), getUserId(auth));
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }

@@ -86,4 +86,35 @@ public class AppointmentService {
 
         repository.save(appointment);
     }
+
+    public void rescheduleAppointment(Long appointmentId, LocalDateTime newDate, Long userId) {
+        Appointment appointment = repository.findById(appointmentId).orElseThrow(AppointmentNotFoundException::new);
+
+        if (!appointment.getCustomer().getId().equals(userId) && !appointment.getEmployee().getId().equals(userId)) {
+            throw new UnauthorizedAccessException("You are not authorized to cancel this appointment");
+        }
+
+        long totalDuration = appointment.getBeautyItems().stream().mapToLong(BeautyItem::getDuration).sum();
+
+        var endInterval = newDate.plusMinutes(totalDuration);
+
+        if (repository.existsByEmployeeIdAndStartIntervalLessThanAndEndIntervalGreaterThan(
+                userId, endInterval, newDate
+        )) {
+            throw new AppointmentOverlapException("The selected employee already has an appointment scheduled for this time.");
+        }
+
+        if (repository.existsByCustomerIdAndStartIntervalLessThanAndEndIntervalGreaterThan(
+                userId, endInterval, newDate
+        )) {
+            throw new AppointmentOverlapException("You already have an appointment scheduled for this time.");
+        }
+
+        appointment.setStartInterval(newDate);
+        appointment.setEndInterval(endInterval);
+        appointment.setActive(true);
+
+        repository.save(appointment);
+    }
+
 }
