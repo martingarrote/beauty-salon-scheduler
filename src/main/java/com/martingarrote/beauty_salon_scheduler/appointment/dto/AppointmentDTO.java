@@ -23,6 +23,8 @@ public record AppointmentDTO(
 
         String observations,
 
-        Double totalPrice
+        Double totalPrice,
+
+        Boolean active
 ) {
 }
