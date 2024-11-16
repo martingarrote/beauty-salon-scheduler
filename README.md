@@ -28,7 +28,7 @@ git clone https://github.com/martingarrote/beauty-salon-scheduler.git
 2. Acesse o diretório do projeto
 
 ```bash
-cd book-lend
+cd beauty-salon-scheduler
 ```
 
 3. Prontifique o PostgreSQL via Docker Compose
