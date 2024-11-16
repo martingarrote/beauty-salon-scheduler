@@ -10,6 +10,10 @@ public record ProfileDTO(
 
         String hairCurl,
 
+        String favoriteEmployeeName,
+
+        Integer loyaltyPoints,
+
         String about,
 
         String instagram

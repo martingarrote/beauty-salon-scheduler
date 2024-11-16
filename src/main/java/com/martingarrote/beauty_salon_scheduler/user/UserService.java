@@ -1,5 +1,6 @@
 package com.martingarrote.beauty_salon_scheduler.user;
 
+import com.martingarrote.beauty_salon_scheduler.appointment.AppointmentService;
 import com.martingarrote.beauty_salon_scheduler.authority.Authority;
 import com.martingarrote.beauty_salon_scheduler.authority.AuthorityRepository;
 import com.martingarrote.beauty_salon_scheduler.exceptions.user.EmailAlreadyInUseException;
@@ -32,6 +33,8 @@ public class UserService {
     private final AuthorityRepository authorityRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
+
+    private final AppointmentService appointmentService;
 
     private static final String AUTHORITY_USER = "ROLE_USER";
     private static final String AUTHORITY_EMPLOYEE = "ROLE_EMPLOYEE";
@@ -67,10 +70,34 @@ public class UserService {
     }
 
     public ProfileDTO profile(String email) {
-        User user = repository.findByEmail(email).orElseThrow(EmailNotFoundException::new);
+        User user = repository.findByEmail(email)
+                .orElseThrow(EmailNotFoundException::new);
 
-        return mapper.toProfileDTO(user);
+        int loyaltyPoints = appointmentService.getLoyaltyPoints(user.getId());
+        String favEmployeeName = getFavoriteEmployeeName(user.getId());
+
+        String faceShape = user.getFaceShape() != null ? user.getFaceShape().name() : null;
+        String hairCurl = user.getHairCurl() != null ? user.getHairCurl().name() : null;
+
+        return new ProfileDTO(
+                user.getName(),
+                user.getEmail(),
+                faceShape,
+                hairCurl,
+                favEmployeeName,
+                loyaltyPoints,
+                user.getAbout(),
+                user.getInstagram()
+        );
     }
+
+    private String getFavoriteEmployeeName(Long userId) {
+        return appointmentService.getFavoriteEmployeeId(userId)
+                .flatMap(repository::findById)
+                .map(User::getName)
+                .orElse(null);
+    }
+
 
     public PageDTO<FullUserDTO> search(
             String name,
