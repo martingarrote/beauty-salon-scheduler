@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +36,6 @@ public class AppointmentService {
         Double totalPrice = beautyItems.stream().mapToDouble(BeautyItem::getPrice).sum();
 
         long totalDuration = beautyItems.stream().mapToLong(BeautyItem::getDuration).sum();
-        System.out.println(totalDuration);
 
         LocalDateTime endInterval = dto.startInterval().plusMinutes(totalDuration);
 
@@ -115,6 +115,15 @@ public class AppointmentService {
         appointment.setActive(true);
 
         repository.save(appointment);
+    }
+
+    public int getLoyaltyPoints(Long userId) {
+        return repository.countLoyaltyPointsByUserId(userId);
+    }
+
+    public Optional<Long> getFavoriteEmployeeId(Long userId) {
+        Long employeeId = repository.findFavoriteEmployeeIdByUserId(userId);
+        return Optional.ofNullable(employeeId);
     }
 
 }
