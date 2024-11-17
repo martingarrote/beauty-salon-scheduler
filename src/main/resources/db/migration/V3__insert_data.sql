@@ -37,7 +37,8 @@ ON CONFLICT (email) DO NOTHING;
 
 INSERT INTO users (name, email, password, about, instagram)
 VALUES
-('Carlos Souza', 'carlos.souza@example.com', '$2a$10$hashsenha', 'Especialista em coloração e penteados.', '@carlos.souza')
+
+('Antonia Joana', 'antonia.joana@example.com', '$2a$10$hashsenha', 'Especialista em coloração e penteados.', '@antonia.joana')
 ON CONFLICT (email) DO NOTHING;
 
 INSERT INTO users (name, email, password, about, instagram)
